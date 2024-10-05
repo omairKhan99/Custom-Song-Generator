@@ -25,8 +25,7 @@ A web application that allows users to generate personalized songs for special o
 2. Set up a virtual environment (optional but recommended):
    ```bash
     python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate
-
+    
 3. Install the required packages:
    ```bash
     pip install -r requirements.txt
