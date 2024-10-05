@@ -1,7 +1,7 @@
 import openai
 
 # Initialize OpenAI API key
-openai.api_key = 'sk-UMN6GqNHPbBtZH932Uep8Y4h49NHvD65DuMBmVliqBT3BlbkFJuV618N8TPajTvf9xCWyGevc-v9v2IMqz-TN3XSgC0A'
+# openai.api_key = 'sk-UMN6GqNHPbBtZH932Uep8Y4h49NHvD65DuMBmVliqBT3BlbkFJuV618N8TPajTvf9xCWyGevc-v9v2IMqz-TN3XSgC0A'
 
 def generate_lyrics(theme, event, relationship, language):
     """
