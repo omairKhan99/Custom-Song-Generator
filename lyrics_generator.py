@@ -1,28 +1,27 @@
-import openai
-from dotenv import load_dotenv
-import os
+from openai import OpenAI
 
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+api_key = "123456789"  # Replace this with your actual API key
+
+client = OpenAI(api_key=api_key)
 
 def generate_lyrics(theme, event, relationship, language):
-    """
-    Generates song lyrics using GPT-4 based on user input.
-
-    :param theme: Theme of the song (e.g., romantic, funny)
-    :param event: The occasion (e.g., birthday, anniversary)
-    :param relationship: Who the song is for (e.g., wife, friend)
-    :param language: Language of the song lyrics
-    :return: Generated song lyrics as a string
-    """
     prompt = f"Write a {theme} song for a {event} about my {relationship} in {language}."
-    
-    
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=200
-    )
-    
-    return response.choices[0].text.strip()
 
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",  # change to "gpt-3" "gpt-4" 
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant that writes song lyrics."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    lyrics = response.choices[0].message.content.strip()
+    return lyrics
+
+if __name__ == "__main__":
+    theme = "romantic"
+    event = "birthday"
+    relationship = "wife"
+    language = "English"
+    generated_lyrics = generate_lyrics(theme, event, relationship, language)
+    
