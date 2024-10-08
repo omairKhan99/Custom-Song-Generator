@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +9,7 @@
 <body> 
     <div class="container">
         <h1>Custom Song Generator</h1>
-        <form action="/generate" method="POST">
+        <form id="songForm">
             <label for="name">Your Name:</label>
             <input type="text" id="name" name="name" required>
             
@@ -29,11 +28,86 @@
                 <option value="es">Spanish</option>
                 <option value="fr">French</option>
                 <option value="hi">Hindi</option>
-                <!-- Add more languages as needed -->
             </select>
 
             <button type="submit">Generate Song</button>
         </form>
+
+        <!-- Section to display the lyrics -->
+        <div id="lyricsSection" style="display: none;">
+            <h2>Generated Song Lyrics</h2>
+            <p id="lyrics"></p>
+
+            <!-- Download lyrics button -->
+            <form action="/download_lyrics" method="POST">
+                <input type="hidden" name="lyrics" id="hiddenLyrics">
+                <button type="submit">Download Lyrics</button>
+            </form>
+        </div>
+
+        <!-- Section for animations -->
+        <div id="emojiSection" class="emoji-container"></div>
     </div>
+
+    <script>
+        const form = document.getElementById('songForm');
+        const lyricsSection = document.getElementById('lyricsSection');
+        const lyricsParagraph = document.getElementById('lyrics');
+        const hiddenLyrics = document.getElementById('hiddenLyrics');
+        const emojiSection = document.getElementById('emojiSection');
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const response = await fetch('/generate', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            // Display the lyrics
+            lyricsParagraph.textContent = data.lyrics;
+            hiddenLyrics.value = data.lyrics;
+            lyricsSection.style.display = 'block';
+
+            // Trigger emoji animation based on theme
+            const theme = formData.get('theme').toLowerCase();
+            triggerEmojiAnimation(theme);
+        };
+
+        function triggerEmojiAnimation(theme) {
+            let emoji;
+            let color;
+
+            if (theme === 'romantic') {
+                emoji = '❤️';
+                color = 'lightpink';
+            } else if (theme === 'funny') {
+                emoji = '😂';
+                color = 'lightyellow';
+            } else if (theme === 'heartfelt') {
+                emoji = '💖';
+                color = 'lightcoral';
+            } else {
+                emoji = '🎵';  // default music note
+                color = 'lightblue';
+            }
+
+            document.body.style.backgroundColor = color;
+
+            // Clear any existing emojis
+            emojiSection.innerHTML = '';
+
+            // Create emoji flying effect
+            for (let i = 0; i < 20; i++) {
+                const emojiElement = document.createElement('div');
+                emojiElement.textContent = emoji;
+                emojiElement.classList.add('flying-emoji');
+                emojiElement.style.left = `${Math.random() * 100}%`;
+                emojiElement.style.animationDelay = `${Math.random() * 2}s`;
+                emojiSection.appendChild(emojiElement);
+            }
+        }
+    </script>
 </body>
-</html>   
+</html>
